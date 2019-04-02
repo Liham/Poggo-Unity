@@ -16,7 +16,7 @@ public class Spawning : MonoBehaviour
     private bool spawned = false;
 
    
-    void Start()
+    public void Spawn()
     {
         while (!spawned)
         {
@@ -25,24 +25,24 @@ public class Spawning : MonoBehaviour
             randPosition = new Vector3(RandX, RandY, 0);
             randRayPosition = new Vector3(RandX, RandY, -10);
 
-            RaycastHit checkSpawnPoint;
+            //RaycastHit checkSpawnPoint;
             Ray checkingRay = new Ray(randRayPosition, Vector3.forward);
 
-            if (Physics.Raycast(checkingRay, out checkSpawnPoint))
+            if (Physics.Raycast(checkingRay, 10f))
             {
                 Debug.DrawRay(randRayPosition, Vector3.forward, Color.red, 1000000);
-                if (checkSpawnPoint.distance > 10)
-                {
-                    Debug.Log("Hit the plane");
-                    Instantiate(playerPrefab, randPosition, Quaternion.identity);
-                    spawned = true;
-                }
-                else
-                {
-                    Debug.Log("Hit the mesh");
-                }
+                Debug.Log("Hit");
+            }
+            else
+            {
+
+                Instantiate(playerPrefab, randPosition, Quaternion.identity);
+                Debug.DrawRay(randRayPosition, Vector3.forward, Color.red, 1000000);
+                Debug.Log("Miss");
+                spawned = true;
             }
         }
+        
         
     }
 
