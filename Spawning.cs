@@ -7,13 +7,16 @@ public class Spawning : MonoBehaviour
 
     private int RandX;
     private int RandY;
-    private Vector3 randPosition;
-    private Vector3 randRayPosition;
+    private int numHits;
+
+    private Vector2 randPosition;
+    private Vector2 castPosition;
+    private Vector2 correctSpawn;
+
     public Transform playerPrefab;
 
-    private float correctDist;
-
     private bool spawned = false;
+    private bool doneCasting = false;
 
    
     public void Spawn()
@@ -22,25 +25,37 @@ public class Spawning : MonoBehaviour
         {
             RandX = Random.Range(-64, 64);
             RandY = Random.Range(-36, 36);
-            randPosition = new Vector3(RandX, RandY, 0);
-            randRayPosition = new Vector3(RandX, RandY, -10);
+            randPosition = new Vector2(RandX, RandY);
+            castPosition = randPosition;
+            correctSpawn = randPosition;
+            numHits = 0;
 
-            //RaycastHit checkSpawnPoint;
-            Ray checkingRay = new Ray(randRayPosition, Vector3.forward);
-
-            if (Physics.Raycast(checkingRay, 10f))
+            while (!doneCasting)
             {
-                Debug.DrawRay(randRayPosition, Vector3.forward, Color.red, 1000000);
-                Debug.Log("Hit");
+                RaycastHit2D checkSpawnPoint = Physics2D.Raycast(castPosition, Vector2.up, 150f);
+                Debug.Log(checkSpawnPoint.point);
+
+                if (checkSpawnPoint.collider != null)
+                {
+                    numHits++;
+                    castPosition.x = checkSpawnPoint.point.x;
+                    castPosition.y = checkSpawnPoint.point.y + 0.1F;
+                }
+                else
+                {
+                    Debug.Log("Reached the else statement.");
+                    doneCasting = true;
+                }
             }
-            else
-            {
 
-                Instantiate(playerPrefab, randPosition, Quaternion.identity);
-                Debug.DrawRay(randRayPosition, Vector3.forward, Color.red, 1000000);
-                Debug.Log("Miss");
+            if (numHits % 2 == 1)
+            {
+                Debug.Log("reached the odd check");
+                Instantiate(playerPrefab, correctSpawn, Quaternion.identity);
                 spawned = true;
             }
+
+
         }
         
         
