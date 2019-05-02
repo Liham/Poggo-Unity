@@ -29,6 +29,7 @@ public class Spawning : MonoBehaviour
             castPosition = randPosition;
             correctSpawn = randPosition;
             numHits = 0;
+            doneCasting = false;
 
             while (!doneCasting)
             {
